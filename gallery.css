@@ -1,0 +1,237 @@
+/* =====================================================================
+   GALLERY — scrapbook / polaroid collage for memories.html
+   ---------------------------------------------------------------------
+   Desktop (≥900px): 3 staggered columns, a landscape "hero" in the middle,
+     polaroids at different sizes with slight tilts, tape & flower stickers.
+   Phones / tablets (<900px): one clean column in story order (photo 1 → 10),
+     alternating left/right with gentle tilts. Photos are NEVER cropped
+     (natural aspect ratio), and overlaps only touch the white frame edges.
+   Motion: scroll reveal (fade + rise + scale), slow floating, column
+     parallax (desktop), hover / tap lift, "straighten when centred" on phones.
+   ===================================================================== */
+
+/* ---------- Layout ---------- */
+.collage {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 1rem 1.25rem 3rem;
+    display: grid;
+    grid-template-columns: 1fr 1.25fr 1fr;
+    gap: 2rem;
+    align-items: start;
+    position: relative;
+    z-index: 3;
+}
+
+.memory-col {
+    display: flex;
+    flex-direction: column;
+    transform: translate3d(0, var(--par, 0px), 0);
+    will-change: transform;
+}
+.memory-col:nth-child(1) { padding-top: 0; }
+.memory-col:nth-child(2) { padding-top: 84px; }
+.memory-col:nth-child(3) { padding-top: 36px; }
+
+/* ---------- Card wrapper: reveal + placement ---------- */
+.polaroid-wrap {
+    margin: 0;
+    margin-top: var(--mt, -10px);          /* frames may kiss; captions never overlap */
+    width: var(--w, 88%);
+    margin-left: var(--ml, auto);
+    margin-right: var(--mr, auto);
+    position: relative;
+    opacity: 0;
+    transform: translate3d(0, 38px, 0) scale(0.95);
+    transition: opacity 0.9s ease var(--d, 0s), transform 1s cubic-bezier(0.2, 0.7, 0.2, 1) var(--d, 0s);
+}
+.memory-col > .polaroid-wrap:first-child { margin-top: 0; }
+.polaroid-wrap.in { opacity: 1; transform: none; }
+.polaroid-wrap:hover, .polaroid-wrap:focus-within { z-index: 6; }
+
+/* ---------- The polaroid itself ---------- */
+.polaroid {
+    position: relative;
+    background: #fffdf9;
+    padding: 12px 12px 0;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(120, 60, 80, 0.10), 0 14px 30px rgba(214, 110, 150, 0.24);
+    transform: rotate(var(--rot, 0deg));
+    transition: transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1), box-shadow 0.45s ease;
+    animation: polaroid-float var(--fd, 9s) ease-in-out var(--fdel, 0s) infinite alternate;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    outline: none;
+}
+
+@keyframes polaroid-float {
+    from { translate: 0 -4px; }
+    to   { translate: 0 5px; }
+}
+
+.polaroid .memory-img {
+    display: block;
+    width: 100%;
+    height: auto;                    /* natural ratio: no cropping of faces */
+    border-radius: 3px;
+    background: #f6e5ec;
+}
+
+.polaroid-cap { padding: 12px 6px 20px; text-align: center; }
+
+.polaroid .memory-date {
+    font-family: 'Dancing Script', cursive;
+    font-size: 1.5rem;
+    line-height: 1.15;
+    color: var(--fx-rose-deep, #c2417a);
+    margin-bottom: 0.35rem;
+}
+
+.polaroid .memory-caption {
+    font-size: 0.86rem;
+    line-height: 1.5;
+    color: #6a5560;
+}
+
+/* hover / focus / tap: straighten, lift, deepen shadow (subtle) */
+@media (hover: hover) {
+    .polaroid:hover {
+        transform: rotate(0deg) scale(1.04);
+        box-shadow: 0 4px 8px rgba(120, 60, 80, 0.12), 0 22px 44px rgba(214, 110, 150, 0.34);
+    }
+}
+.polaroid:focus-visible {
+    transform: rotate(0deg) scale(1.04);
+    box-shadow: 0 0 0 3px #fff, 0 0 0 6px var(--fx-rose, #ff69b4), 0 22px 44px rgba(214, 110, 150, 0.34);
+}
+.polaroid:active { transform: rotate(0deg) scale(1.02); }
+
+/* ---------- Scrapbook details ---------- */
+.polaroid .tape {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    width: 86px;
+    height: 24px;
+    transform: translateX(-50%) rotate(var(--tr, -3deg));
+    background: linear-gradient(180deg, rgba(255, 216, 230, 0.92), rgba(255, 194, 214, 0.82));
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+    clip-path: polygon(0 8%, 4% 0, 8% 8%, 12% 0, 16% 8%, 20% 0, 24% 8%, 28% 0, 32% 8%, 36% 0, 40% 8%, 44% 0, 48% 8%, 52% 0, 56% 8%, 60% 0, 64% 8%, 68% 0, 72% 8%, 76% 0, 80% 8%, 84% 0, 88% 8%, 92% 0, 96% 8%, 100% 0, 100% 92%, 96% 100%, 92% 92%, 88% 100%, 84% 92%, 80% 100%, 76% 92%, 72% 100%, 68% 92%, 64% 100%, 60% 92%, 56% 100%, 52% 92%, 48% 100%, 44% 92%, 40% 100%, 36% 92%, 32% 100%, 28% 92%, 24% 100%, 20% 92%, 16% 100%, 12% 92%, 8% 100%, 4% 92%, 0 100%);
+    pointer-events: none;
+    z-index: 2;
+}
+
+.polaroid.has-flower::after {
+    content: '';
+    position: absolute;
+    top: -18px;
+    right: -14px;
+    width: 44px;
+    height: 44px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg fill='%23ffd3e3' stroke='%23e58aae' stroke-width='2.2'%3E%3Cellipse cx='50' cy='24' rx='16' ry='22'/%3E%3Cellipse cx='50' cy='24' rx='16' ry='22' transform='rotate(72 50 50)'/%3E%3Cellipse cx='50' cy='24' rx='16' ry='22' transform='rotate(144 50 50)'/%3E%3Cellipse cx='50' cy='24' rx='16' ry='22' transform='rotate(216 50 50)'/%3E%3Cellipse cx='50' cy='24' rx='16' ry='22' transform='rotate(288 50 50)'/%3E%3C/g%3E%3Ccircle cx='50' cy='50' r='9' fill='%23f5d27a'/%3E%3C/svg%3E") center / contain no-repeat;
+    filter: drop-shadow(0 2px 3px rgba(120, 60, 80, 0.25));
+    pointer-events: none;
+    z-index: 2;
+}
+
+/* ---------- Phones & tablets: one clean, story-ordered column ---------- */
+@media (max-width: 899px) {
+    .collage {
+        display: flex;
+        flex-direction: column;
+        max-width: 480px;
+        gap: 2.4rem;
+        padding: 0.5rem 1rem 3rem;
+        overflow-x: clip;
+    }
+    .memory-col { display: contents; }
+    .memory-col:nth-child(n) { padding-top: 0; }
+
+    .polaroid-wrap {
+        order: var(--o, 0);
+        width: 82%;
+        margin: 0 auto 0 3%;
+    }
+    .polaroid-wrap.r { margin: 0 3% 0 auto; }
+    .polaroid-wrap.wide { width: 94%; margin: 0 auto; }
+
+    /* tap/scroll-friendly: the photo nearest the middle of the screen straightens */
+    .polaroid.is-centered {
+        transform: rotate(calc(var(--rot, 0deg) * 0.3)) scale(1.02);
+        box-shadow: 0 4px 8px rgba(120, 60, 80, 0.12), 0 20px 40px rgba(214, 110, 150, 0.32);
+    }
+}
+
+@media (max-width: 480px) {
+    .final-message .letter-card .letter-end { font-size: 1.4rem; }
+    .letter-card { padding: 2rem 1.3rem 1.5rem; }
+}
+
+@media (max-width: 380px) {
+    .polaroid { padding: 9px 9px 0; }
+    .polaroid .memory-date { font-size: 1.35rem; }
+}
+
+/* ---------- Letter + finale ---------- */
+.reveal {
+    opacity: 0;
+    transform: translate3d(0, 22px, 0);
+    transition: opacity 0.9s ease var(--d, 0s), transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) var(--d, 0s);
+}
+.reveal.in { opacity: 1; transform: none; }
+
+.letter-card {
+    position: relative;
+    max-width: 640px;
+    margin: 0 auto 2rem;
+    padding: 2.2rem 1.8rem 1.8rem;
+    background: rgba(255, 253, 249, 0.86);
+    border-radius: 18px;
+    box-shadow: 0 14px 40px rgba(214, 110, 150, 0.22);
+    text-align: left;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+}
+.letter-card::before {                 /* soft rose ribbon along the top */
+    content: '';
+    position: absolute;
+    top: 0; left: 24px; right: 24px;
+    height: 4px;
+    border-radius: 0 0 4px 4px;
+    background: linear-gradient(90deg, #ffc2d6, #ff8fb8, #f0cf7a, #ff8fb8, #ffc2d6);
+}
+.final-message .letter-card p { max-width: none; margin: 0 0 1.05rem; font-size: 1.08rem; line-height: 1.75; color: #5a4650; }
+.final-message .letter-card p:last-child { margin-bottom: 0; }
+.final-message .letter-card .letter-to { font-family: 'Dancing Script', cursive; font-size: 1.9rem; color: var(--fx-rose-deep, #c2417a); }
+.final-message .letter-card .letter-end { font-family: 'Dancing Script', cursive; font-size: 1.6rem; color: var(--fx-rose-deep, #c2417a); margin-top: 1.4rem; }
+.final-message .letter-card .letter-sign { text-align: right; font-style: italic; color: var(--fx-rose-deep, #c2417a); }
+
+.wish-chips {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.6rem;
+    max-width: 640px;
+    margin: 0 auto 1.6rem;
+    padding: 0;
+    list-style: none;
+}
+.wish-chips li {
+    padding: 0.45rem 0.95rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.85);
+    border: 1px solid rgba(217, 138, 166, 0.45);
+    color: var(--fx-rose-text, #8f3b62);
+    font-size: 0.95rem;
+    box-shadow: 0 4px 12px rgba(214, 110, 150, 0.14);
+}
+.wish-heading { font-family: 'Dancing Script', cursive; font-size: 1.7rem; color: var(--fx-rose-deep, #c2417a); margin-bottom: 0.9rem; }
+.finale-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.9rem; }
+.finale-actions .share-btn { margin-left: 0; }
+
+/* ---------- No-JS + reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+    .polaroid { animation: none; }
+    .polaroid-wrap, .reveal { transition: opacity 0.4s ease; transform: none; }
+    .memory-col { transform: none; will-change: auto; }
+}

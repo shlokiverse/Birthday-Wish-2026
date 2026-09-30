@@ -1,0 +1,213 @@
+/* =====================================================================
+   GARDEN — shared background effects for every page
+   ---------------------------------------------------------------------
+   Architecture
+     .background-effects            one fixed, full-viewport layer per page
+       ├─ .bgfx-sky                 sunset gradient (fills the whole viewport)
+       ├─ .bgfx-clouds              3 slow, soft light-blobs
+       ├─ .bgfx-hills / .bgfx-meadow soft green hills + a row of small flowers
+       ├─ .bgfx-corner (x4)         flower & leaf corners (SVG, gentle sway)
+       ├─ canvas.bgfx-canvas        petals · flowers · hearts · sparkles · flecks
+       └─ .bgfx-birds               a few slow silhouettes (SVG, CSS-animated)
+
+   The layer sits at z-index:-1 (behind ALL page content), is never
+   interactive (pointer-events:none) and is clipped (overflow:hidden), so it
+   can never block a button/photo or cause horizontal scrolling.
+   Built and driven by garden.js.
+   ===================================================================== */
+
+:root {
+    /* Palette — the site's existing pink stays primary; the rest is soft support */
+    --fx-blush: #ffe2ec;
+    --fx-pink: #ffc2d6;
+    --fx-rose: #ff69b4;        /* existing brand pink (buttons, accents) */
+    --fx-rose-deep: #c2417a;   /* readable pink for headings on pastel */
+    --fx-rose-text: #8f3b62;   /* readable body copy on pastel */
+    --fx-rose-muted: #d98aa6;
+    --fx-cream: #fff6ea;
+    --fx-sage: #a9c8a0;
+    --fx-leaf: #7fa37a;
+    --fx-gold: #e9c46a;
+}
+
+/* ---------- Layer ---------- */
+.background-effects {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;               /* always behind page content */
+    overflow: hidden;
+    pointer-events: none;      /* never blocks clicks / taps */
+    contain: layout paint style;
+}
+
+.background-effects * {
+    pointer-events: none;
+}
+
+/* ---------- Sky: "romantic garden at sunset" ---------- */
+.bgfx-sky {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+        radial-gradient(110% 58% at 50% 108%, rgba(255, 200, 175, 0.66) 0%, rgba(255, 186, 200, 0.42) 40%, rgba(255, 226, 236, 0) 70%),
+        radial-gradient(70% 45% at 90% -6%, rgba(255, 255, 255, 0.75) 0%, rgba(255, 255, 255, 0) 70%),
+        radial-gradient(60% 40% at 8% 42%, rgba(255, 246, 234, 0.55) 0%, rgba(255, 246, 234, 0) 70%),
+        linear-gradient(180deg, #ffdbe8 0%, #ffd9e6 30%, #ffe3e3 62%, #ffeddc 100%);
+}
+
+/* ---------- Clouds: slow drifting light ---------- */
+.bgfx-clouds i {
+    position: absolute;
+    display: block;
+    width: 70vw;
+    height: 26vh;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0));
+    will-change: transform;
+    animation: bgfx-drift 80s ease-in-out infinite alternate;
+}
+
+.bgfx-clouds i:nth-child(1) { top: 6%;  left: -20vw; }
+.bgfx-clouds i:nth-child(2) { top: 38%; left: 40vw; width: 60vw; animation-duration: 110s; animation-delay: -30s; opacity: 0.8; }
+.bgfx-clouds i:nth-child(3) { top: 66%; left: -10vw; width: 80vw; animation-duration: 95s; animation-delay: -55s; opacity: 0.6; }
+
+@keyframes bgfx-drift {
+    from { transform: translate3d(-8vw, 0, 0); }
+    to   { transform: translate3d(14vw, 0, 0); }
+}
+
+/* ---------- Hills + meadow ---------- */
+.bgfx-hills,
+.bgfx-meadow {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: block;
+    width: 100%;
+}
+
+.bgfx-hills { height: clamp(70px, 15vh, 150px); }
+.bgfx-meadow {
+    height: clamp(64px, 12vh, 118px);
+    transform-origin: 50% 100%;
+    animation: bgfx-meadow-sway 9s ease-in-out infinite alternate;
+}
+
+@keyframes bgfx-meadow-sway {
+    from { transform: skewX(-0.8deg); }
+    to   { transform: skewX(0.8deg); }
+}
+
+/* ---------- Flower corners ---------- */
+.bgfx-corner {
+    position: absolute;
+    width: clamp(150px, 38vw, 320px);
+    height: clamp(150px, 38vw, 320px);
+    opacity: 0.92;
+    will-change: transform;
+    animation: bgfx-sway 12s ease-in-out infinite alternate;
+}
+
+.bgfx-corner svg { display: block; width: 100%; height: 100%; overflow: visible; }
+
+.bgfx-tl { top: 0;    left: 0;  transform-origin: 0 0; }
+.bgfx-tr { top: 0;    right: 0; transform-origin: 100% 0;  animation-duration: 14s; animation-delay: -4s; width: clamp(120px, 30vw, 260px); height: clamp(120px, 30vw, 260px); }
+.bgfx-bl { bottom: 0; left: 0;  transform-origin: 0 100%; animation-duration: 13s; animation-delay: -7s; }
+.bgfx-br { bottom: 0; right: 0; transform-origin: 100% 100%; animation-duration: 15s; animation-delay: -2s; width: clamp(130px, 32vw, 280px); height: clamp(130px, 32vw, 280px); }
+
+.bgfx-tr svg { transform: scaleX(-1); }
+.bgfx-bl svg { transform: scaleY(-1); }
+.bgfx-br svg { transform: scale(-1, -1); }
+
+@keyframes bgfx-sway {
+    from { transform: rotate(-1.3deg); }
+    to   { transform: rotate(1.6deg); }
+}
+
+/* ---------- Canvas (petals / flowers / hearts / sparkles / flecks) ---------- */
+.bgfx-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+/* ---------- Birds ---------- */
+.bgfx-birds {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+}
+
+.bgfx-bird {
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+    will-change: transform, opacity;
+    animation-name: bgfx-fly-r;
+    animation-timing-function: linear;
+    animation-fill-mode: forwards;
+}
+
+.bgfx-bird.rtl { animation-name: bgfx-fly-l; }
+
+.bgfx-bird svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    animation: bgfx-bob 3.2s ease-in-out infinite alternate;
+}
+
+.bgfx-wing {
+    transform-box: view-box;
+    transform-origin: 20px 11px;
+    animation: bgfx-flap 0.95s ease-in-out infinite alternate;
+}
+
+@keyframes bgfx-fly-r {
+    0%   { transform: translate3d(-14vw, 0, 0); opacity: 0; }
+    7%   { opacity: 0.72; }
+    93%  { opacity: 0.72; }
+    100% { transform: translate3d(114vw, -7vh, 0); opacity: 0; }
+}
+
+@keyframes bgfx-fly-l {
+    0%   { transform: translate3d(114vw, 0, 0) scaleX(-1); opacity: 0; }
+    7%   { opacity: 0.72; }
+    93%  { opacity: 0.72; }
+    100% { transform: translate3d(-14vw, -7vh, 0) scaleX(-1); opacity: 0; }
+}
+
+@keyframes bgfx-bob {
+    from { transform: translateY(-5px); }
+    to   { transform: translateY(6px); }
+}
+
+@keyframes bgfx-flap {
+    from { transform: scaleY(1); }
+    to   { transform: scaleY(-0.5); }
+}
+
+/* ---------- Reduced motion: simplify everything ---------- */
+@media (prefers-reduced-motion: reduce) {
+    .bgfx-corner,
+    .bgfx-clouds i,
+    .bgfx-meadow {
+        animation: none;
+    }
+    .bgfx-birds { display: none; }
+}

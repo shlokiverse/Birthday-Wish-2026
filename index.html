@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- CUSTOMIZE: Change the title -->
+    <title>Happy Birthday Piyu ❤️</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8C%B8%3C/text%3E%3C/svg%3E">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <link rel="stylesheet" href="home.css">
+    <link rel="stylesheet" href="garden.css">
+    <script src="garden.js" defer></script>
+    <script src="music-sync.js" defer></script>
+</head>
+<body data-garden="intro">
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loading-heart">💖</div>
+        <div class="loading-text">Loading magic...</div>
+    </div>
+
+    <audio id="bgMusic" loop>
+        <source src="hbd.mp3" type="audio/mpeg">
+    </audio>
+    <div class="music-toggle" id="musicToggle" title="Toggle Music">
+        <span class="music-icon">🎵</span>
+    </div>
+    <div class="container">
+        <div id="countdown-section" class="countdown-section">
+            <h2 class="countdown-title">Birthday Countdown</h2>
+            <div class="countdown-timer">
+                <div class="countdown-item">
+                    <span id="days" class="countdown-number">00</span>
+                    <span class="countdown-label">Days</span>
+                </div>
+                <div class="countdown-item">
+                    <span id="hours" class="countdown-number">00</span>
+                    <span class="countdown-label">Hours</span>
+                </div>
+                <div class="countdown-item">
+                    <span id="minutes" class="countdown-number">00</span>
+                    <span class="countdown-label">Minutes</span>
+                </div>
+                <div class="countdown-item">
+                    <span id="seconds" class="countdown-number">00</span>
+                    <span class="countdown-label">Seconds</span>
+                </div>
+            </div>
+        </div>
+        <div id="birthday-content" class="birthday-content" style="display: none;">
+            <div class="level-up-badge">Another beautiful chapter unlocked ✨</div>
+            <!-- CUSTOMIZE: Change the name -->
+            <h1>Happy Birthday Piyu ❤️</h1>
+            <!-- CUSTOMIZE: Change nickname or remove this line -->
+            <p class="nickname-text">To my Piyu 🌸</p>
+            <div class="greeting"></div>
+            <!-- CUSTOMIZE: Change your name -->
+            <p class="from-text">— POobear ❤️</p>
+            <button class="cta-button">Click to Enter 💕</button>
+        </div>
+    </div>
+
+    <script src="home.js"></script>
+</body>
+</html>

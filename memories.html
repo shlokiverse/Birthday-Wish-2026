@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- CUSTOMIZE: Change the title -->
+    <title>Our Memories ✨</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8C%B8%3C/text%3E%3C/svg%3E">
+    <link rel="stylesheet" href="garden.css">
+    <link rel="stylesheet" href="gallery.css">
+    <script src="garden.js" defer></script>
+    <script src="music-sync.js" defer></script>
+    <script src="gallery.js" defer></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@300;400;500;600&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg,
+                    rgba(255, 209, 220, 0.85) 0%,
+                    rgba(230, 230, 250, 0.85) 25%,
+                    rgba(255, 239, 213, 0.85) 50%,
+                    rgba(230, 230, 250, 0.85) 75%,
+                    rgba(255, 209, 220, 0.85) 100%);
+            background-size: 400% 400%;
+            background-position: center;
+            background-attachment: fixed;
+            animation: gradientFlow 15s ease infinite;
+            font-family: 'Quicksand', sans-serif;
+            overflow-x: hidden;
+            color: #4a4a4a;
+        }
+
+        @keyframes gradientFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Floating Hearts */
+        .floating-hearts {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .heart {
+            position: absolute;
+            font-size: 1.5rem;
+            color: rgba(255, 105, 180, 0.6);
+            animation: floatHeart var(--float-duration, 6s) ease-in-out infinite;
+            animation-delay: var(--delay, 0s);
+        }
+
+        @keyframes floatHeart {
+            0% { transform: translate(0, 100vh) rotate(0deg); }
+            100% { transform: translate(var(--translate-x, 0), -100vh) rotate(360deg); }
+        }
+
+        /* Welcome Section */
+        .welcome {
+            text-align: center;
+            padding: 4rem 2rem;
+            position: relative;
+            z-index: 3;
+        }
+
+        .welcome h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 4rem;
+            /* CUSTOMIZE: Change primary color */
+            color: var(--fx-rose-deep, #c2417a);
+            text-shadow: 0 0 14px rgba(255, 255, 255, 0.9);
+            animation: fadeInScale 2s ease;
+        }
+
+        .welcome p {
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 1.5rem auto;
+            line-height: 1.6;
+            color: var(--fx-rose-text, #8f3b62);
+            animation: fadeIn 2s ease 0.5s both;
+        }
+
+        /* Final Message Section */
+        .final-message {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+            margin-top: 3rem;
+            position: relative;
+            z-index: 3;
+        }
+
+        .final-message h2 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3rem;
+            /* CUSTOMIZE: Change color */
+            color: var(--fx-rose-deep, #c2417a);
+            margin-bottom: 2rem;
+            display: inline-block;   /* heartbeat scales the text, not a full-width block */
+            animation: heartbeat 2s infinite;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .final-message p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+            line-height: 1.8;
+        }
+
+        .goodbye-btn {
+            display: inline-block;
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+            /* CUSTOMIZE: Change button gradient */
+            background: linear-gradient(45deg, #ff69b4, #ff99cc);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(255, 105, 180, 0.4);
+            animation: float 3s infinite ease-in-out;
+        }
+
+        .goodbye-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(255, 105, 180, 0.6);
+        }
+
+        .signature {
+            font-style: italic;
+            font-size: 1.3rem;
+            /* CUSTOMIZE: Change signature color */
+            color: var(--fx-rose-deep, #c2417a);
+            margin-top: 1rem;
+            line-height: 1.7;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes fadeInScale {
+            0% { opacity: 0; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            /* CUSTOMIZE: Change scrollbar gradient */
+            background: linear-gradient(45deg, #ff69b4, #ff99cc);
+            border-radius: 6px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .welcome { padding: 5rem 1.25rem 2rem; }
+            .welcome h1 { font-size: 3rem; }
+            .final-message { padding: 3rem 1.1rem; }
+            .final-message h2 { font-size: 2.5rem; }
+        }
+
+        /* Music Toggle Button */
+        .music-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            /* CUSTOMIZE: Change music button gradient */
+            background: linear-gradient(45deg, #ff69b4, #ff99cc);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(255, 105, 180, 0.4);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .music-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(255, 105, 180, 0.6);
+        }
+
+        .music-toggle.playing {
+            animation: musicPulse 1s ease-in-out infinite;
+        }
+
+        .music-icon {
+            font-size: 1.5rem;
+        }
+
+        @keyframes musicPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        /* Back Button */
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 50px;
+            height: 50px;
+            /* CUSTOMIZE: Change back button gradient */
+            background: linear-gradient(45deg, #ff69b4, #ff99cc);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(255, 105, 180, 0.4);
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-decoration: none;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .back-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(255, 105, 180, 0.6);
+        }
+
+        /* Share Button */
+        .share-btn {
+            display: inline-block;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            /* CUSTOMIZE: Change share button gradient */
+            background: linear-gradient(45deg, #e07aa8, #ff8fb8);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            margin-left: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(224, 122, 168, 0.4);
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        .share-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(224, 122, 168, 0.6);
+        }
+    </style>
+</head>
+
+<body data-garden="memories">
+    <audio id="bgMusic" loop>
+        <source src="hbd.mp3" type="audio/mpeg">
+    </audio>
+    <div class="music-toggle" id="musicToggle" title="Toggle Music">
+        <span class="music-icon">🎵</span>
+    </div>
+    <a href="timeline.html" class="back-btn" title="Go Back">←</a>
+
+    <div class="floating-hearts">
+        <div class="heart" style="--float-duration: 6s; --delay: 0s; --translate-x: 20px; left: 10%;">💝</div>
+        <div class="heart" style="--float-duration: 8s; --delay: 1s; --translate-x: -30px; left: 30%;">💖</div>
+        <div class="heart" style="--float-duration: 7s; --delay: 2s; --translate-x: 40px; left: 50%;">💗</div>
+        <div class="heart" style="--float-duration: 9s; --delay: 3s; --translate-x: -20px; left: 70%;">💓</div>
+        <div class="heart" style="--float-duration: 5s; --delay: 4s; --translate-x: 30px; left: 90%;">💕</div>
+    </div>
+
+    <section class="welcome">
+        <!-- CUSTOMIZE: Change the title -->
+        <h1>Our Special Moments</h1>
+        <!-- CUSTOMIZE: Change the description -->
+        <p>Some moments are just meant to be treasured. Here's to all the laughs, talks, and unforgettable times we've shared...</p>
+    </section>
+
+    <div class="collage memory-container">
+        <div class="memory-col">
+            <figure class="polaroid-wrap memory-card" style="--o:1;--rot:-2.8deg;--w:88%;--ml:0;--mr:auto;--tr:-1deg;--fd:9s;--fdel:-1.3s">
+                <div class="polaroid has-flower" role="button" tabindex="0" aria-label="Open photo: Tumhari smile">
+                    <img class="memory-img" src="photos/photo1.jpg" width="900" height="1600" alt="Piyu resting her chin on her hand, smiling, at night" loading="lazy" decoding="async">
+                    <div class="polaroid-cap">
+                        <div class="memory-date">Tumhari smile</div>
+                        <div class="memory-caption">Piyu, tumhari yeh smile dekh kar mera poora din ban jaata hai. ❤️</div>
+                    </div>
+                </div>
+            </figure>
+            <figure class="polaroid-wrap memory-card" style="--o:6;--rot:2.2deg;--w:80%;--ml:auto;--mr:0;--tr:-3deg;--fd:9.5s;--fdel:-0.8s">
+                <div class="polaroid" role="button" tabindex="0" aria-label="Open photo: Meri mukammal duniya">
+                    <span class="tape" aria-hidden="true"></span><img class="memory-img" src="photos/photo6.jpg" width="900" height="1600" alt="A close selfie of the two of us outdoors" loading="lazy" decoding="async">
+                    <div class="polaroid-cap">
+                        <div class="memory-date">Meri mukammal duniya</div>
+                        <div class="memory-caption">Meri duniya mukammal si lagti hai jab tum mere paas hoti ho, Piyu. 🌹</div>
+                    </div>
+                </div>
+            </figure>
+            <figure class="polaroid-wrap memory-card r" style="--o:5;--rot:-1.6deg;--w:90%;--ml:6%;--mr:auto;--tr:1deg;--fd:12s;--fdel:-6.5s">
+                <div class="polaroid has-flower" role="button" tabindex="0" aria-label="Open photo: Best moments">
+                    <img class="memory-img" src="photos/photo5.jpg" width="900" height="1600" alt="The two of us standing together by a tree" loading="lazy" decoding="async">
+                    <div class="polaroid-cap">
+                        <div class="memory-date">Best moments</div>
+                        <div class="memory-caption">Best moments sirf locations ki wajah se nahi, balki tumhare saath hone ki wajah se special hain. 📸</div>
+                    </div>
+                </div>
+            </figure>
+        </div>
+        <div class="memory-col">
+            <figure class="polaroid-wrap memory-card wide" style="--o:2;--rot:1.4deg;--w:100%;--ml:auto;--mr:auto;--tr:1deg;--fd:11s;--fdel:-2.6s">
+                <div class="polaroid" role="button" tabindex="0" aria-label="Open photo: Nazar na lage">
+                    <span class="tape" aria-hidden="true"></span><img class="memory-img" src="photos/photo2.jpg" width="1600" height="900" alt="Piyu standing on a balcony overlooking a big garden" loading="lazy" decoding="async">
+                    <div class="polaroid-cap">
+                        <div class="memory-date">Nazar na lage</div>
+                        <div class="memory-caption">Nazar na lage tumhe, duniya ki sabse khoobsurat ladki ho tum. ✨</div>
+                    </div>
+                </div>
+            </figure>
+            <figure class="polaroid-wrap memory-card r" style="--o:3;--rot:-2.4deg;--w:78%;--ml:auto;--mr:0;--tr:-3deg;--fd:10s;--fdel:-3.9s">
+                <div class="polaroid" role="button" tabindex="0" aria-label="Open photo: Jaadu jaisa">
+                    <span class="tape" aria-hidden="true"></span><img class="memory-img" src="photos/photo3.jpg" width="900" height="1600" alt="A close, smiling selfie of the two of us" loading="lazy" decoding="async">
+                    <div class="polaroid-cap">
+                        <div class="memory-date">Jaadu jaisa</div>
+                        <div class="memory-caption">Piyu, tumhare saath bitaya har ek pal mere liye jaadu jaisa hai. ♾️</div>
+                    </div>
+                </div>
+            </figure>
+            <figure class="polaroid-wrap memory-card wide" style="--o:8;--rot:2.0deg;--w:96%;--ml:auto;--mr:auto;--tr:1deg;--fd:11.5s;--fdel:-3.4s">
+                <div class="polaroid" role="button" tabindex="0" aria-label="Open photo: Ek pyaari yaad">
+                    <span class="tape" aria-hidden="true"></span><img class="memory-img" src="photos/photo8.jpg" width="1285" height="679" alt="A smiling selfie of the two of us" loading="lazy" decoding="async">
+                    <div class="polaroid-cap">
+                        <div class="memory-date">Ek pyaari yaad</div>
+                        <div class="memory-caption">Yeh yaad jab bhi aati hai, chehre par apne aap ek pyaari si smile aa jaati hai. 🥺</div>
+                    </div>
+                </div>
+            </figure>
+            <figure class="polaroid-wrap memory-card r" style="--o:7;--rot:-1.8deg;--w:82%;--ml:4%;--mr:auto;--tr:-1deg;--fd:10.5s;--fdel:-2.1s">
+                <div class="polaroid has-flower" role="button" tabindex="0" aria-label="Open photo: Safar ka saath">
+                    <img class="memory-img" src="photos/photo7.jpg" width="900" height="1600" alt="A night-time selfie of the two of us" loading="lazy" decoding="async">
+                    <div class="polaroid-cap">
+                        <div class="memory-date">Safar ka saath</div>
+                        <div class="memory-caption">Piyu, zindagi ke safar mein tumhara haath mil gaya, toh aur kya chahiye? 🤝💖</div>
+                    </div>
+                </div>
+            </figure>
+        </div>
+        <div class="memory-col">
+            <figure class="polaroid-wrap memory-card" style="--o:4;--rot:2.6deg;--w:86%;--ml:auto;--mr:0;--tr:-1deg;--fd:8s;--fdel:-5.2s">
+                <div class="polaroid" role="button" tabindex="0" aria-label="Open photo: Pagalpan & hasi">
+                    <span class="tape" aria-hidden="true"></span><img class="memory-img" src="photos/photo4.jpg" width="900" height="1600" alt="A bright, smiling selfie of the two of us" loading="lazy" decoding="async">
+                    <div class="polaroid-cap">
+                        <div class="memory-date">Pagalpan & hasi</div>
+                        <div class="memory-caption">Hum dono ka yeh pagalpan aur yeh hasi bas aise hi bani rahe! ❤️</div>
+                    </div>
+                </div>
+            </figure>
+            <figure class="polaroid-wrap memory-card" style="--o:9;--rot:-2.2deg;--w:80%;--ml:0;--mr:auto;--tr:-3deg;--fd:9s;--fdel:-4.7s">
+                <div class="polaroid" role="button" tabindex="0" aria-label="Open photo: Sabse badi khushi">
+                    <span class="tape" aria-hidden="true"></span><img class="memory-img" src="photos/photo9.jpg" width="900" height="1600" alt="Piyu smiling in front of colourful balloons" loading="lazy" decoding="async">
+                    <div class="polaroid-cap">
+                        <div class="memory-date">Sabse badi khushi</div>
+                        <div class="memory-caption">Tumhe aise haste hue dekhna hi mere liye sabse badi khushi hai, Piyu.</div>
+                    </div>
+                </div>
+            </figure>
+            <figure class="polaroid-wrap memory-card r" style="--o:10;--rot:1.8deg;--w:90%;--ml:auto;--mr:auto;--tr:-1deg;--fd:10s;--fdel:-6.0s">
+                <div class="polaroid has-flower" role="button" tabindex="0" aria-label="Open photo: Bas dekhte rehna">
+                    <img class="memory-img" src="photos/photo10.jpg" width="900" height="1600" alt="Piyu posing on a couch next to pink and white balloons" loading="lazy" decoding="async">
+                    <div class="polaroid-cap">
+                        <div class="memory-date">Bas dekhte rehna</div>
+                        <div class="memory-caption">Tumhari yeh ada aur yeh style, bas dekhte rehne ka mann karta hai. 🥰</div>
+                    </div>
+                </div>
+            </figure>
+        </div>
+    </div>
+
+    <section class="final-message" data-garden-section="letter">
+        <h2>Happy Birthday, Piyu ❤️</h2>
+        <div class="letter-card">
+            <p class="letter-to reveal">Piyu,</p>
+            <p class="reveal">This birthday, POobear just wants to celebrate you and the beautiful memories we've shared. ❤️</p>
+            <p class="reveal">I know we've been through hurt, mistakes, misunderstandings and difficult phases, but my love and care for you have always been genuine.</p>
+            <p class="reveal">I still miss your smile, your gussa, our calls, chats, stupid little moments and everything that made us special.</p>
+            <p class="reveal">I don't expect anything from you today. I just want you to be happy, peaceful and successful.</p>
+            <p class="reveal">And somewhere in my heart, I still believe we'll face everything, deal with everything together, and find our way back to our relationship. ❤️</p>
+            <p class="letter-end reveal">Happy Birthday, Piyu. 🌋❤️</p>
+            <p class="letter-sign reveal">— POobear</p>
+        </div>
+
+        <div class="finale" data-garden-section="final">
+            <div class="wish-heading reveal">Wishing you</div>
+            <ul class="wish-chips reveal">
+                <li>🌷 Happiness</li>
+                <li>🕊️ Peace</li>
+                <li>✨ Success</li>
+                <li>💼 Career</li>
+                <li>📸 Beautiful memories</li>
+                <li>😊 Genuine smiles</li>
+                <li>🌍 New adventures</li>
+            </ul>
+            <p class="signature reveal">Take care, birthday girl. 🌸<br>Lots of love, POobear 🌋❤️</p>
+            <div class="finale-actions reveal">
+                <a href="#" class="goodbye-btn" onclick="celebrate()">Celebrate! 🎊</a>
+                <button class="share-btn" onclick="shareWebsite()">Share This 💌</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Confetti Canvas -->
+    <canvas id="confetti-canvas" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999;"></canvas>
+
+    <script>
+        // Music control
+        const bgMusic = document.getElementById('bgMusic');
+        const musicToggle = document.getElementById('musicToggle');
+        const musicIcon = musicToggle.querySelector('.music-icon');
+
+        function toggleMusic() {
+            if (bgMusic.paused) {
+                bgMusic.play().then(() => {
+                    musicToggle.classList.add('playing');
+                    musicIcon.textContent = '🎵';
+                    localStorage.setItem('musicPlaying', 'true');
+                }).catch((err) => console.log('Music play failed:', err));
+            } else {
+                bgMusic.pause();
+                musicToggle.classList.remove('playing');
+                musicIcon.textContent = '🔇';
+                localStorage.setItem('musicPlaying', 'false');
+            }
+        }
+
+        musicToggle.addEventListener('click', toggleMusic);
+
+        if (localStorage.getItem('musicPlaying') === 'true') {
+            bgMusic.play().then(() => {
+                musicToggle.classList.add('playing');
+                musicIcon.textContent = '🎵';
+            }).catch(() => {
+                musicIcon.textContent = '🔇';
+            });
+        }
+
+        // Confetti Animation
+        const canvas = document.getElementById('confetti-canvas');
+        const ctx = canvas.getContext('2d');
+        let confettiPieces = [];
+        let animationId;
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        class Confetti {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height - canvas.height;
+                this.size = Math.random() * 10 + 5;
+                this.speedY = Math.random() * 3 + 2;
+                this.speedX = Math.random() * 2 - 1;
+                this.color = ['#ff69b4', '#ffd700', '#87ceeb', '#98fb98', '#dda0dd', '#f0e68c', '#ff6347'][Math.floor(Math.random() * 7)];
+                this.rotation = Math.random() * 360;
+                this.rotationSpeed = Math.random() * 10 - 5;
+            }
+
+            update() {
+                this.y += this.speedY;
+                this.x += this.speedX;
+                this.rotation += this.rotationSpeed;
+            }
+
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.rotation * Math.PI / 180);
+                ctx.fillStyle = this.color;
+                ctx.fillRect(-this.size / 2, -this.size / 2, this.size, this.size / 2);
+                ctx.restore();
+            }
+        }
+
+        function createConfetti() {
+            for (let i = 0; i < 150; i++) {
+                confettiPieces.push(new Confetti());
+            }
+        }
+
+        function animateConfetti() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            confettiPieces.forEach((piece, index) => {
+                piece.update();
+                piece.draw();
+
+                if (piece.y > canvas.height) {
+                    confettiPieces.splice(index, 1);
+                }
+            });
+
+            if (confettiPieces.length > 0) {
+                animationId = requestAnimationFrame(animateConfetti);
+            }
+        }
+
+        function celebrate() {
+            if (window.event) window.event.preventDefault();
+            if (window.Garden) window.Garden.burst();
+            createConfetti();
+            animateConfetti();
+
+            setTimeout(() => { createConfetti(); }, 500);
+            setTimeout(() => { createConfetti(); }, 1000);
+        }
+
+        // Share function - CUSTOMIZE: Update the share message
+        function shareWebsite() {
+            const shareData = {
+                title: 'Happy Birthday, Piyu 🌸',
+                text: 'A little birthday surprise for Piyu 💖',
+                url: window.location.href
+            };
+
+            if (navigator.share) {
+                navigator.share(shareData)
+                    .catch((err) => console.log('Share cancelled'));
+            } else {
+                navigator.clipboard.writeText(window.location.href).then(() => {
+                    alert('Link copied to clipboard! 💖');
+                }).catch(() => {
+                    alert('Share this link: ' + window.location.href);
+                });
+            }
+        }
+    </script>
+</body>
+</html>

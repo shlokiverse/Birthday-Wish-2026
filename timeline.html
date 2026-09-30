@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- CUSTOMIZE: Change the title -->
+    <title>Our Journey 💫</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8C%B8%3C/text%3E%3C/svg%3E">
+    <link rel="stylesheet" href="garden.css">
+    <script src="garden.js" defer></script>
+    <script src="music-sync.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg,
+                    rgba(255, 209, 220, 0.85) 0%,
+                    rgba(230, 230, 250, 0.85) 25%,
+                    rgba(255, 239, 213, 0.85) 50%,
+                    rgba(230, 230, 250, 0.85) 75%,
+                    rgba(255, 209, 220, 0.85) 100%);
+            background-size: 400% 400%;
+            background-position: center;
+            background-attachment: fixed;
+            animation: gradientFlow 15s ease infinite;
+            font-family: 'Quicksand', sans-serif;
+            overflow-x: hidden;
+            color: #4a4a4a;
+        }
+
+        .page-title {
+            text-align: center;
+            color: var(--fx-rose-deep, #c2417a);
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            padding: 5.4rem 1rem 0;
+            text-shadow: 0 0 14px rgba(255, 255, 255, 0.9);
+        }
+
+        .page-subtitle {
+            text-align: center;
+            color: var(--fx-rose-text, #8f3b62);
+            font-size: 1.2rem;
+            margin-bottom: 3rem;
+            padding: 0 1rem;
+        }
+
+        .timeline {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            padding: 2rem 0;
+            overflow-x: clip;   /* slide-in cards never widen the page */
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, rgba(217,138,166,0.15), rgba(217,138,166,0.55), rgba(217,138,166,0.15));
+            border-radius: 2px;
+        }
+
+        .timeline-item {
+            display: flex;
+            justify-content: flex-end;
+            padding-right: 50%;
+            position: relative;
+            margin-bottom: 3rem;
+            opacity: 0;
+            transform: translateX(-50px);
+        }
+
+        .timeline-item:nth-child(even) {
+            justify-content: flex-start;
+            padding-right: 0;
+            padding-left: 50%;
+            transform: translateX(50px);
+        }
+
+        .timeline-item.visible {
+            opacity: 1;
+            transform: translateX(0);
+            transition: all 0.6s ease;
+        }
+
+        .timeline-content {
+            background: rgba(255,255,255,0.93);
+            padding: 1.5rem;
+            border-radius: 15px;
+            max-width: 350px;
+            margin: 0 2rem;
+            box-shadow: 0 10px 30px rgba(214,110,150,0.22);
+            position: relative;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #f0cf7a;
+            border: 3px solid #fff;
+            border-radius: 50%;
+            top: 50%;
+            transform: translateY(-50%);
+            box-shadow: 0 0 14px rgba(240,207,122,0.7);
+        }
+
+        .timeline-item:nth-child(odd) .timeline-dot {
+            right: calc(50% - 10px);
+        }
+
+        .timeline-item:nth-child(even) .timeline-dot {
+            left: calc(50% - 10px);
+        }
+
+        .timeline-date {
+            font-size: 0.9rem;
+            /* CUSTOMIZE: Change date color */
+            color: var(--fx-rose-deep, #c2417a);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-title {
+            font-size: 1.2rem;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-desc {
+            font-size: 1rem;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .timeline-emoji {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Friendship Receipt */
+        .receipt-container {
+            max-width: 400px;
+            margin: 3rem auto;
+            background: #fffef5;
+            padding: 2rem;
+            border-radius: 5px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            font-family: 'Courier New', monospace;
+            position: relative;
+        }
+
+        .receipt-container::before,
+        .receipt-container::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 20px;
+            background: linear-gradient(45deg, transparent 33.33%, #fffef5 33.33%, #fffef5 66.66%, transparent 66.66%),
+                        linear-gradient(-45deg, transparent 33.33%, #fffef5 33.33%, #fffef5 66.66%, transparent 66.66%);
+            background-size: 20px 40px;
+        }
+
+        .receipt-container::before {
+            top: -10px;
+        }
+
+        .receipt-container::after {
+            bottom: -10px;
+            transform: rotate(180deg);
+        }
+
+        .receipt-header {
+            text-align: center;
+            border-bottom: 2px dashed #333;
+            padding-bottom: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .receipt-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .receipt-subtitle {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .receipt-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px dotted #ccc;
+        }
+
+        .receipt-label {
+            color: #333;
+        }
+
+        .receipt-value {
+            /* CUSTOMIZE: Change value color */
+            color: var(--fx-rose-deep, #c2417a);
+            font-weight: bold;
+        }
+
+        .receipt-total {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 2px dashed #333;
+            text-align: center;
+            font-size: 1.2rem;
+        }
+
+        .receipt-footer {
+            text-align: center;
+            margin-top: 1rem;
+            font-size: 0.8rem;
+            color: #888;
+        }
+
+        .next-btn {
+            display: block;
+            margin: 3rem auto;
+            padding: 1rem 2.5rem;
+            font-size: 1.2rem;
+            background: linear-gradient(45deg, #ff69b4, #ff99cc);
+            border: none;
+            border-radius: 50px;
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(255,105,180,0.4);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .next-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255,105,180,0.6);
+        }
+
+        /* Music Toggle */
+        .music-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(45deg, #ff69b4, #ff99cc);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(255, 105, 180, 0.4);
+            transition: transform 0.3s;
+        }
+
+        .music-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        .music-toggle.playing {
+            animation: pulse 1s ease-in-out infinite;
+        }
+
+        .music-icon {
+            font-size: 1.5rem;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        /* Back Button */
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(45deg, #ff69b4, #ff99cc);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(255, 105, 180, 0.4);
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-decoration: none;
+            color: #fff;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .back-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(255, 105, 180, 0.6);
+        }
+
+        @media (max-width: 768px) {
+            .timeline::before {
+                left: 20px;
+            }
+
+            .timeline-item,
+            .timeline-item:nth-child(even) {
+                padding-left: 50px;
+                padding-right: 0;
+                justify-content: flex-start;
+            }
+
+            .timeline-item:nth-child(odd) .timeline-dot,
+            .timeline-item:nth-child(even) .timeline-dot {
+                left: 10px;
+                right: auto;
+            }
+
+            .page-title {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body data-garden="timeline">
+    <audio id="bgMusic" loop>
+        <source src="hbd.mp3" type="audio/mpeg">
+    </audio>
+    <div class="music-toggle" id="musicToggle" title="Toggle Music">
+        <span class="music-icon">🎵</span>
+    </div>
+    <a href="wishes.html" class="back-btn" title="Go Back">←</a>
+
+    <h1 class="page-title">Our Journey Together 💫</h1>
+    <p class="page-subtitle">The moments that made us special</p>
+
+    <div class="timeline">
+        <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+                <div class="timeline-emoji">📞</div>
+                <div class="timeline-date">Our little moments</div>
+                <div class="timeline-title">Calls, chats &amp; stupid little things</div>
+                <div class="timeline-desc">Our calls, our chats and all those stupid little moments that made us special.</div>
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+                <div class="timeline-emoji">😊</div>
+                <div class="timeline-date">What I love</div>
+                <div class="timeline-title">Your eyes &amp; your smile</div>
+                <div class="timeline-desc">The one thing I love about you the most. Your smile can make my whole day.</div>
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+                <div class="timeline-emoji">😤</div>
+                <div class="timeline-date">Yes, even this</div>
+                <div class="timeline-title">Your gussa</div>
+                <div class="timeline-desc">I miss it too. Don't tell anyone. 😅</div>
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+                <div class="timeline-emoji">🤍</div>
+                <div class="timeline-date">Through the hard phases</div>
+                <div class="timeline-title">Always genuine</div>
+                <div class="timeline-desc">There were hurts, mistakes, misunderstandings and difficult phases. But my love and care for you were always genuine.</div>
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+                <div class="timeline-emoji">🎂</div>
+                <div class="timeline-date">8 October</div>
+                <div class="timeline-title">Your Birthday!</div>
+                <div class="timeline-desc">And here we are, celebrating YOU and the beautiful memories we've shared. 💖</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="receipt-container">
+        <div class="receipt-header">
+            <div class="receipt-title">🧾 OUR LITTLE RECEIPT</div>
+            <div class="receipt-subtitle">Piyu &amp; POobear</div>
+        </div>
+        <div class="receipt-row">
+            <span class="receipt-label">Time Together:</span>
+            <span class="receipt-value">~2 yrs 11 months</span>
+        </div>
+        <div class="receipt-row">
+            <span class="receipt-label">I Call You:</span>
+            <span class="receipt-value">Piyu 🌸</span>
+        </div>
+        <div class="receipt-row">
+            <span class="receipt-label">You Call Me:</span>
+            <span class="receipt-value">Poobear 🐻</span>
+        </div>
+        <div class="receipt-row">
+            <span class="receipt-label">Favourite Thing:</span>
+            <span class="receipt-value">Your eyes &amp; smile</span>
+        </div>
+        <div class="receipt-row">
+            <span class="receipt-label">Things I Admire:</span>
+            <span class="receipt-value">Everything ✨</span>
+        </div>
+        <div class="receipt-total">
+            <strong>TOTAL VALUE: PRICELESS 💖</strong>
+        </div>
+        <div class="receipt-footer">
+            Thank you for the beautiful memories, Piyu.<br>
+            — POobear ❤️
+        </div>
+    </div>
+
+    <button class="next-btn" onclick="goToMemories()">View Our Memories 📸</button>
+
+    <script>
+        // Music Control
+        const bgMusic = document.getElementById('bgMusic');
+        const musicToggle = document.getElementById('musicToggle');
+        const musicIcon = musicToggle.querySelector('.music-icon');
+
+        function toggleMusic() {
+            if (bgMusic.paused) {
+                bgMusic.play().then(() => {
+                    musicToggle.classList.add('playing');
+                    musicIcon.textContent = '🎵';
+                    localStorage.setItem('musicPlaying', 'true');
+                }).catch((err) => console.log('Music play failed:', err));
+            } else {
+                bgMusic.pause();
+                musicToggle.classList.remove('playing');
+                musicIcon.textContent = '🔇';
+                localStorage.setItem('musicPlaying', 'false');
+            }
+        }
+
+        musicToggle.addEventListener('click', toggleMusic);
+
+        if (localStorage.getItem('musicPlaying') === 'true') {
+            bgMusic.play().then(() => {
+                musicToggle.classList.add('playing');
+                musicIcon.textContent = '🎵';
+            }).catch(() => {
+                musicIcon.textContent = '🔇';
+            });
+        }
+
+        // Timeline animation on scroll
+        const timelineItems = document.querySelectorAll('.timeline-item');
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.3 });
+
+        timelineItems.forEach(item => observer.observe(item));
+
+        // Initial animation for visible items
+        setTimeout(() => {
+            timelineItems.forEach((item, index) => {
+                setTimeout(() => {
+                    item.classList.add('visible');
+                }, index * 200);
+            });
+        }, 500);
+
+        // Navigation
+        function goToMemories() {
+            gsap.to('body', {
+                opacity: 0,
+                duration: 0.8,
+                onComplete: () => {
+                    window.location.href = 'memories.html';
+                }
+            });
+        }
+    </script>
+</body>
+</html>

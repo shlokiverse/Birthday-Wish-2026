@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- CUSTOMIZE: Change the title -->
+    <title>Birthday Wishes 💖</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8C%B8%3C/text%3E%3C/svg%3E">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <link rel="stylesheet" href="./wishes.css">
+    <link rel="stylesheet" href="garden.css">
+    <script src="garden.js" defer></script>
+    <script src="music-sync.js" defer></script>
+</head>
+<body data-garden="wishes">
+    <audio id="bgMusic" loop>
+        <source src="hbd.mp3" type="audio/mpeg">
+    </audio>
+    <div class="music-toggle" id="musicToggle" title="Toggle Music">
+        <span class="music-icon">🎵</span>
+    </div>
+    <a href="index.html" class="back-btn" title="Go Back">←</a>
+
+    <div class="container">
+        <!-- CUSTOMIZE: Change the name -->
+        <h1>Happy Birthday Piyu 💖</h1>
+
+        <div id="reasons-container"></div>
+
+        <button class="shuffle-button">Click Here... 💕</button>
+        <div class="reason-counter"></div>
+
+        <div class="ending-section">
+            <div class="teddy-hug">
+                <!-- CUSTOMIZE: Change the image -->
+                <img src="photos/photo1.jpg" alt="Piyu smiling, resting her chin on her hand" loading="lazy">
+            </div>
+            <!-- CUSTOMIZE: Change the ending text -->
+            <div class="ending-text">Happy Birthday, Piyu! 💖</div>
+        </div>
+    </div>
+
+    <script src="wishes.js"></script>
+</body>
+</html>
